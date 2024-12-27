@@ -1,22 +1,30 @@
 <template>
   <div class="docs-page">
-    <h1>文档中心</h1>
-    <div class="content">
-      <!-- 临时占位内容 -->
-      <p>文档页面正在建设中...</p>
+    <div class="docs-content">
+      <h1>文档中心</h1>
+      <div class="content">
+        <!-- 临时占位内容 -->
+        <p>文档页面正在建设中...</p>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .docs-page {
-  padding: 6rem 2rem 2rem;
+  background: #f5f5f5;
+  min-height: calc(100vh - 56px);
+}
+
+.docs-content {
+  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 h1 {
   color: #1a237e;
+  font-size: 2.5rem;
   margin-bottom: 2rem;
 }
 
@@ -24,6 +32,21 @@ h1 {
   background: white;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .docs-content {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
 }
 </style>

@@ -3,9 +3,8 @@ import { ref } from "vue";
 
 const menuItems = ref([
   { name: "首页", path: "/" },
-  { name: "数据处理", path: "/process" },
-  { name: "分析工具", path: "/analysis" },
-  { name: "关于我们", path: "/about" },
+  { name: "数据处理", path: "/404" },
+  { name: "关于我们", path: "/404" },
 ]);
 </script>
 
@@ -31,18 +30,16 @@ const menuItems = ref([
 <style scoped>
 .header {
   background: linear-gradient(135deg, #1a237e, #0d47a1);
-  padding: 0.75rem 0;
   position: fixed;
-  width: 100vw;
-  left: 0;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
   height: 56px;
+  z-index: 100;
 }
 
 .header-content {
-  max-width: 1200px;
-  margin: 0 auto;
+  height: 100%;
   padding: 0 2rem;
   display: flex;
   justify-content: space-between;
@@ -50,6 +47,7 @@ const menuItems = ref([
 }
 
 .logo-container {
+  height: 100%;
   display: flex;
   align-items: center;
 }
@@ -59,30 +57,25 @@ const menuItems = ref([
   width: auto;
 }
 
-.navigation {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-}
-
 .nav-list {
-  list-style: none;
   display: flex;
   gap: 2rem;
-  margin: 0;
-  padding: 0;
+  list-style: none;
 }
 
 .nav-link {
   color: white;
-  text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: background-color 0.3s;
 }
 
 .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.router-link-active {
   background-color: rgba(255, 255, 255, 0.1);
 }
 </style>

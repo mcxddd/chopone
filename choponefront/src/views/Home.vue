@@ -12,11 +12,6 @@ const features = ref([
     description: "强大的分析工具，深入洞察数据价值",
     icon: "📊",
   },
-  {
-    title: "安全可靠",
-    description: "企业级安全保障，确保数据安全",
-    icon: "🔒",
-  },
 ]);
 </script>
 
@@ -62,21 +57,11 @@ const features = ref([
 </template>
 
 <style scoped>
-.home {
-  padding-top: 56px; /* 修正为header的实际高度 */
-  color: #333;
-}
-
 .hero {
   background: linear-gradient(135deg, #1a237e, #0d47a1);
   color: white;
   padding: 6rem 2rem;
   text-align: center;
-}
-
-.hero-content {
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 .hero h1 {
@@ -86,8 +71,8 @@ const features = ref([
 
 .hero-subtitle {
   font-size: 1.5rem;
-  margin-bottom: 2rem;
   opacity: 0.9;
+  margin-bottom: 2rem;
 }
 
 .hero-actions {
@@ -100,71 +85,63 @@ const features = ref([
   padding: 0.8rem 2rem;
   border-radius: 4px;
   font-size: 1.1rem;
-  cursor: pointer;
   transition: all 0.3s;
-  border: none;
 }
 
 .btn.primary {
-  background-color: #1a237e;
-  color: white;
-}
-
-.btn.primary:hover {
-  background-color: #0d47a1;
-  transform: translateY(-2px);
-}
-
-.btn.secondary {
-  background-color: transparent;
-  border: 2px solid #1a237e;
+  background: white;
   color: #1a237e;
 }
 
+.btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn.secondary {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
 .btn.secondary:hover {
-  background-color: rgba(26, 35, 126, 0.1);
+  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
 }
 
 .features {
   padding: 4rem 2rem;
-  background-color: #fff;
+  text-align: center;
 }
 
 .features h2 {
-  text-align: center;
   color: #1a237e;
-  margin-bottom: 3rem;
   font-size: 2.5rem;
+  margin-bottom: 3rem;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .feature-card {
-  background: white;
   padding: 2rem;
   border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
-  border: 1px solid #eee;
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
 .feature-icon {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
   color: #1a237e;
+  margin-bottom: 1rem;
 }
 
 .feature-card h3 {
@@ -177,26 +154,34 @@ const features = ref([
 }
 
 .cta {
+  background: #f5f5f5;
   padding: 6rem 2rem;
   text-align: center;
-  background: #f5f5f5;
-  color: #333;
-}
-
-.cta-content {
-  max-width: 600px;
-  margin: 0 auto;
 }
 
 .cta h2 {
+  color: #1a237e;
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #1a237e;
 }
 
 .cta p {
+  color: #666;
   font-size: 1.2rem;
   margin-bottom: 2rem;
-  color: #666;
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .features h2 {
+    font-size: 2rem;
+  }
 }
 </style>
