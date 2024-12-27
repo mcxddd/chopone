@@ -1,0 +1,29 @@
+<template>
+  <div class="support-page">
+    <h1>技术支持</h1>
+    <div class="content">
+      <!-- 临时占位内容 -->
+      <p>技术支持页面正在建设中...</p>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.support-page {
+  padding: 6rem 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #1a237e;
+  margin-bottom: 2rem;
+}
+
+.content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+</style>
