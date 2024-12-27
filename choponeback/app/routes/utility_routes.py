@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.pdf_service import compress_pdf
+from app.services.pdf_service import compress_pdf, CompressionLevel
 from app.utils.response_utils import create_response
 import os
 
@@ -18,11 +18,16 @@ def compress_pdf_route():
         if not file.filename.endswith('.pdf'):
             return create_response(False, "File must be a PDF", None), 400
         
-        compressed_file_path = compress_pdf(file)
+        # Get compression level from request
+        compression_level_str = request.form.get('compression_level', 'MEDIUM').upper()
+        try:
+            compression_level = CompressionLevel[compression_level_str]
+        except KeyError:
+            return create_response(False, "Invalid compression level. Must be one of: VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH", None), 400
         
-        return create_response(True, "PDF compressed successfully", {
-            "file_path": compressed_file_path
-        })
+        result = compress_pdf(file, compression_level)
+        
+        return create_response(True, "PDF compressed successfully", result)
         
     except Exception as e:
         return create_response(False, str(e), None), 500 

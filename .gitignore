@@ -1,22 +1,95 @@
-# Python
+### 通用 ###
+.DS_Store
+*.log
+*.swp
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+tmp/
+temp/
+
+### 后端 (Python) ###
+# 保留原有的 backend 相关配置
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Virtual Environment
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
 venv/
 env/
-.env
+ENV/
 
-# IDE
-.vscode/
-.idea/
+### 前端 ###
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
 
-# Project specific
+# 构建输出
+dist/
+build/
+out/
+.next/
+
+# 缓存
+.cache/
+.parcel-cache/
+
+# 测试覆盖率
+coverage/
+
+# 本地环境文件
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+### 数据库 ###
+*.sqlite
+*.sqlite3
+*.db
+
+### 媒体文件 ###
+media/
 uploads/
-downloads/
-*.log
+*.mp4
+*.mp3
+*.pdf
+*.zip
+*.tar.gz
 
-# System
-.DS_Store
-Thumbs.db 
+### 系统相关 ###
+Thumbs.db
+desktop.ini
+
+### 其他 ###
+*.bak
+*.tmp
+.history/ 

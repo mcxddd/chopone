@@ -2,9 +2,22 @@ import os
 from PyPDF2 import PdfReader, PdfWriter
 from werkzeug.utils import secure_filename
 from flask import current_app
+from enum import Enum
 
-def compress_pdf(file):
-    """Compress PDF file by reducing image quality and optimizing content"""
+class CompressionLevel(Enum):
+    VERY_LOW = 10    # 90% quality
+    LOW = 30         # 70% quality
+    MEDIUM = 50      # 50% quality
+    HIGH = 70        # 30% quality
+    VERY_HIGH = 90   # 10% quality
+
+def compress_pdf(file, compression_level=CompressionLevel.MEDIUM):
+    """
+    Compress PDF file by reducing image quality and optimizing content
+    Args:
+        file: The uploaded PDF file
+        compression_level: CompressionLevel enum (10, 30, 50, 70, 90)
+    """
     filename = secure_filename(file.filename)
     
     # Ensure both upload and download directories exist
@@ -15,19 +28,23 @@ def compress_pdf(file):
         
     # Save uploaded file to upload folder
     input_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-    # Save compressed file to download folder
-    output_path = os.path.join(current_app.config['DOWNLOAD_FOLDER'], f'compressed_{filename}')
+    # Save compressed file to download folder with compression level in filename
+    output_filename = f'compressed_{compression_level.value}_{filename}'
+    output_path = os.path.join(current_app.config['DOWNLOAD_FOLDER'], output_filename)
     
     file.save(input_path)
     
     reader = PdfReader(input_path)
     writer = PdfWriter()
 
+    # Calculate image quality based on compression level
+    image_quality = 100 - compression_level.value
+
     # Compress each page
     for page in reader.pages:
         # Reduce image quality
         for image in page.images:
-            image.quality = 50  # Reduce image quality to 50%
+            image.quality = image_quality  # Set image quality based on compression level
             image.reduce_size()
         
         # Add compressed page
@@ -36,7 +53,10 @@ def compress_pdf(file):
     # Set compression parameters
     writer.set_compression(True)  # Enable compression
     writer.compress_streams = True  # Compress stream objects
-    writer.compress_content_streams = True  # Compress content streams
+    
+    # Adjust content stream compression based on level
+    if compression_level in [CompressionLevel.HIGH, CompressionLevel.VERY_HIGH]:
+        writer.compress_content_streams = True
     
     # Write the compressed PDF to download folder
     with open(output_path, 'wb') as output_file:
@@ -54,5 +74,7 @@ def compress_pdf(file):
         'file_path': output_path,
         'original_size': original_size,
         'compressed_size': compressed_size,
-        'compression_ratio': f"{compression_ratio:.1f}%"
+        'compression_ratio': f"{compression_ratio:.1f}%",
+        'compression_level': compression_level.name,
+        'image_quality': f"{image_quality}%"
     } 
