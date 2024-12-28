@@ -1,33 +1,44 @@
-from flask import Blueprint, request, jsonify
-from app.services.pdf_service import compress_pdf, CompressionLevel
-from app.utils.response_utils import create_response
+from flask import Blueprint, request, current_app
+from app.services.pdf_service import PdfService
+from app.models.pdf_dto import CompressionLevel, ApiResponse
 import os
+from dataclasses import asdict
+from urllib.parse import quote
 
 utility_bp = Blueprint('utility', __name__)
+pdf_service = PdfService()
 
 @utility_bp.route('/api/utility/compress-pdf', methods=['POST'])
 def compress_pdf_route():
     try:
+        # 验证请求
         if 'file' not in request.files:
-            return create_response(False, "No file provided", None), 400
+            return asdict(ApiResponse(False, "No file provided")), 400
         
         file = request.files['file']
         if file.filename == '':
-            return create_response(False, "No file selected", None), 400
+            return asdict(ApiResponse(False, "No file selected")), 400
             
-        if not file.filename.endswith('.pdf'):
-            return create_response(False, "File must be a PDF", None), 400
+        if not file.filename.lower().endswith('.pdf'):
+            return asdict(ApiResponse(False, "File must be a PDF")), 400
         
-        # Get compression level from request
+        # 获取压缩级别
         compression_level_str = request.form.get('compression_level', 'MEDIUM').upper()
         try:
             compression_level = CompressionLevel[compression_level_str]
         except KeyError:
-            return create_response(False, "Invalid compression level. Must be one of: VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH", None), 400
+            return asdict(ApiResponse(False, "Invalid compression level")), 400
         
-        result = compress_pdf(file, compression_level)
+        # 执行压缩
+        result = pdf_service.compress_pdf(file, compression_level)
         
-        return create_response(True, "PDF compressed successfully", result)
+        # URL编码文件名，确保中文正确显示
+        filename = os.path.basename(result.file_path)
+        encoded_filename = quote(filename)
+        result_dict = asdict(result)
+        result_dict['file_path'] = f"/api/download/{encoded_filename}"
+        
+        return asdict(ApiResponse(True, "PDF compressed successfully", result_dict))
         
     except Exception as e:
-        return create_response(False, str(e), None), 500 
+        return asdict(ApiResponse(False, str(e))), 500 

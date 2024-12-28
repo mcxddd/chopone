@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 const menuItems = ref([
   { name: "首页", path: "/" },
-  { name: "数据处理", path: "/404" },
+  { name: "小工具", path: "/tools" },
   { name: "关于我们", path: "/404" },
 ]);
 </script>
@@ -12,7 +12,7 @@ const menuItems = ref([
   <header class="header">
     <div class="header-content">
       <div class="logo-container">
-        <img src="@/assets/full_logo.png" alt="Chopone Logo" class="logo" />
+        <router-link to="/" class="logo">CHOPONE</router-link>
       </div>
       <nav class="navigation">
         <ul class="nav-list">
@@ -29,13 +29,13 @@ const menuItems = ref([
 
 <style scoped>
 .header {
-  background: linear-gradient(135deg, #1a237e, #0d47a1);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 56px;
   z-index: 100;
+  background: linear-gradient(120deg, #2c3e50 0%, #3498db 100%);
 }
 
 .header-content {
@@ -44,6 +44,7 @@ const menuItems = ref([
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .logo-container {
@@ -53,8 +54,18 @@ const menuItems = ref([
 }
 
 .logo {
-  height: 36px;
-  width: auto;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.logo:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .nav-list {
@@ -68,14 +79,27 @@ const menuItems = ref([
   font-size: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+  position: relative;
 }
 
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: white;
+  transition: width 0.3s;
 }
 
-.router-link-active {
-  background-color: rgba(255, 255, 255, 0.1);
+.nav-link:hover::after {
+  width: 80%;
+}
+
+.router-link-active::after {
+  width: 80%;
 }
 </style>

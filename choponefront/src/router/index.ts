@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
+import NotFound from "../views/NotFound.vue";
+import Tools from "../views/Tools.vue";
+import PdfCompress from "../views/tools/PdfCompress.vue";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
@@ -10,13 +13,19 @@ const router = createRouter({
       component: Home,
     },
     {
-      path: "/404",
-      name: "not-found",
-      component: () => import("../views/NotFound.vue"),
+      path: "/tools",
+      name: "tools",
+      component: Tools,
+    },
+    {
+      path: "/tools/pdf-compress",
+      name: "pdf-compress",
+      component: PdfCompress,
     },
     {
       path: "/:pathMatch(.*)*",
-      redirect: "/404",
+      name: "not-found",
+      component: NotFound,
     },
   ],
 });

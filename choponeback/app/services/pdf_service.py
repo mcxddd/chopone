@@ -1,80 +1,105 @@
 import os
+import time
+from typing import Tuple
 from PyPDF2 import PdfReader, PdfWriter
-from werkzeug.utils import secure_filename
 from flask import current_app
-from enum import Enum
+from app.models.pdf_dto import CompressionLevel, PdfCompressionResult
 
-class CompressionLevel(Enum):
-    VERY_LOW = 10    # 90% quality
-    LOW = 30         # 70% quality
-    MEDIUM = 50      # 50% quality
-    HIGH = 70        # 30% quality
-    VERY_HIGH = 90   # 10% quality
-
-def compress_pdf(file, compression_level=CompressionLevel.MEDIUM):
-    """
-    Compress PDF file by reducing image quality and optimizing content
-    Args:
-        file: The uploaded PDF file
-        compression_level: CompressionLevel enum (10, 30, 50, 70, 90)
-    """
-    filename = secure_filename(file.filename)
+class PdfService:
+    """PDF处理服务"""
     
-    # Ensure both upload and download directories exist
-    if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
-        os.makedirs(current_app.config['UPLOAD_FOLDER'])
-    if not os.path.exists(current_app.config['DOWNLOAD_FOLDER']):
-        os.makedirs(current_app.config['DOWNLOAD_FOLDER'])
+    def _process_pdf(self, input_path: str, output_path: str, compression_level: CompressionLevel) -> None:
+        """
+        处理PDF文件 - 使用基本压缩
+        Args:
+            input_path: 输入文件路径
+            output_path: 输出文件路径
+            compression_level: 压缩级别
+        """
+        try:
+            reader = PdfReader(input_path)
+            writer = PdfWriter()
+            
+            # 启用压缩
+            writer.compress = True
+            
+            # 处理每个页面
+            for page in reader.pages:
+                writer.add_page(page)
+            
+            # 写入新文件，使用最大压缩
+            with open(output_path, 'wb') as output_file:
+                writer.write(output_file)
+                
+        except Exception as e:
+            print(f"Error in _process_pdf: {str(e)}")
+            raise
+
+    def _handle_file(self, file) -> Tuple[str, str, int]:
+        """
+        处理文件的上传和保存
+        Args:
+            file: 上传的文件
+        Returns:
+            Tuple[str, str, int]: (输入文件路径, 输出文件路径, 原始文件大小)
+        """
+        storage_service = current_app.storage_service
         
-    # Save uploaded file to upload folder
-    input_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-    # Save compressed file to download folder with compression level in filename
-    output_filename = f'compressed_{compression_level.value}_{filename}'
-    output_path = os.path.join(current_app.config['DOWNLOAD_FOLDER'], output_filename)
-    
-    file.save(input_path)
-    
-    reader = PdfReader(input_path)
-    writer = PdfWriter()
-
-    # Calculate image quality based on compression level
-    image_quality = 100 - compression_level.value
-
-    # Compress each page
-    for page in reader.pages:
-        # Reduce image quality
-        for image in page.images:
-            image.quality = image_quality  # Set image quality based on compression level
-            image.reduce_size()
+        # 获取原始文件名
+        original_filename = file.filename
+        name, ext = os.path.splitext(original_filename)
         
-        # Add compressed page
-        writer.add_page(page)
-    
-    # Set compression parameters
-    writer.set_compression(True)  # Enable compression
-    writer.compress_streams = True  # Compress stream objects
-    
-    # Adjust content stream compression based on level
-    if compression_level in [CompressionLevel.HIGH, CompressionLevel.VERY_HIGH]:
-        writer.compress_content_streams = True
-    
-    # Write the compressed PDF to download folder
-    with open(output_path, 'wb') as output_file:
-        writer.write(output_file)
-    
-    # Clean up the input file from upload folder
-    os.remove(input_path)
-    
-    # Get file sizes for comparison
-    original_size = os.path.getsize(input_path) if os.path.exists(input_path) else 0
-    compressed_size = os.path.getsize(output_path)
-    compression_ratio = ((original_size - compressed_size) / original_size * 100) if original_size > 0 else 0
-    
-    return {
-        'file_path': output_path,
-        'original_size': original_size,
-        'compressed_size': compressed_size,
-        'compression_ratio': f"{compression_ratio:.1f}%",
-        'compression_level': compression_level.name,
-        'image_quality': f"{image_quality}%"
-    } 
+        # 生成输入文件名（保持中文）
+        input_filename = f"original_{name}{ext}"
+        input_path = os.path.join(current_app.config['UPLOAD_FOLDER'], input_filename)
+        
+        # 如果存在同名文件，先删除
+        if os.path.exists(input_path):
+            os.remove(input_path)
+        
+        # 保存上传的文件
+        storage_service.save_file(file, input_filename, current_app.config['UPLOAD_FOLDER'])
+        original_size = storage_service.get_file_size(input_path)
+        
+        # 生成输出文件名（保持中文）
+        output_filename = f"compressed_{name}{ext}"
+        output_path = os.path.join(current_app.config['DOWNLOAD_FOLDER'], output_filename)
+        
+        # 如果存在同名文件，先删除
+        if os.path.exists(output_path):
+            os.remove(output_path)
+        
+        return input_path, output_path, original_size
+
+    def compress_pdf(self, file, compression_level: CompressionLevel = CompressionLevel.MEDIUM) -> PdfCompressionResult:
+        """
+        处理PDF文件
+        Args:
+            file: 上传的PDF文件
+            compression_level: 压缩级别
+        Returns:
+            处理结果
+        """
+        storage_service = current_app.storage_service
+        
+        try:
+            # 处理文件
+            input_path, output_path, original_size = self._handle_file(file)
+            
+            # 处理PDF
+            self._process_pdf(input_path, output_path, compression_level)
+            
+            # 获取文件大小
+            compressed_size = storage_service.get_file_size(output_path)
+            compression_ratio = ((original_size - compressed_size) / original_size * 100)
+            
+            return PdfCompressionResult(
+                file_path=output_path,
+                original_size=original_size,
+                compressed_size=compressed_size,
+                compression_ratio=f"{compression_ratio:.1f}%"
+            )
+            
+        except Exception as e:
+            print(f"Error processing PDF: {str(e)}")
+            raise 
