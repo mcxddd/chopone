@@ -11,9 +11,9 @@ def create_app(config_class=Config):
     # Enable CORS
     CORS(app)
     
-    # 配置上传和下载目录
-    app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'uploads')
-    app.config['DOWNLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'downloads')
+    # 配置上传和下载目录（使用环境变量或默认值）
+    app.config['UPLOAD_FOLDER'] = os.environ.get('UPLOAD_FOLDER', '/app/data/uploads')
+    app.config['DOWNLOAD_FOLDER'] = os.environ.get('DOWNLOAD_FOLDER', '/app/data/downloads')
     
     # 初始化存储服务
     storage_service = StorageService()
