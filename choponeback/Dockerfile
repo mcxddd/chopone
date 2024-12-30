@@ -20,12 +20,13 @@ RUN mkdir -p /app/data/uploads /app/data/downloads
 COPY . .
 
 # 设置环境变量
-ENV FLASK_APP=app
-ENV FLASK_ENV=production
-ENV PYTHONUNBUFFERED=1
+ENV FLASK_APP=app \
+    FLASK_ENV=production \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
 # 暴露端口
 EXPOSE 5000
 
 # 启动应用
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "app:create_app()"] 
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-", "app:create_app()"] 

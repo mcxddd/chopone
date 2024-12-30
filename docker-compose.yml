@@ -4,9 +4,10 @@ services:
       context: ./choponefront
       dockerfile: Dockerfile
     volumes:
-      - frontend_dist:/app/dist
+      - frontend_dist:/dist
     networks:
       - chopone-network
+    restart: unless-stopped
 
   backend:
     build:
@@ -22,11 +23,16 @@ services:
       - DOWNLOAD_FOLDER=/app/data/downloads
     networks:
       - chopone-network
+    restart: unless-stopped
 
 networks:
   chopone-network:
     driver: bridge
+    name: chopone_network
 
 volumes:
   data:
+    name: chopone_data
   frontend_dist:
+    name: chopone_frontend_dist
+    external: true
