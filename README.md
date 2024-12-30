@@ -1,327 +1,164 @@
 # Chopone
 
-一个在线工具集合网站，目前支持 PDF 压缩功能。
+一个基于 Vue.js 和 Flask 的 Web 应用程序，使用 Caddy 作为反向代理。
 
 ## 项目结构
 
 ```
 chopone/
-├── choponeback/     # 后端项目 (Python Flask)
-└── choponefront/    # 前端项目 (Vue 3 + TypeScript)
+├── choponefront/         # Vue.js 前端项目
+├── choponeback/         # Flask 后端项目
+├── docker-compose.yml   # Docker 编排配置
+└── README.md
 ```
 
-## 功能特性
+## 系统要求
 
-- PDF 压缩
-  - 支持三种压缩级别（轻度、标准、极限）
-  - 支持中文文件名
-  - 自动文件清理
-  - 实时压缩率显示
+- Docker
+- Docker Compose
+- Caddy (作为独立容器运行)
 
-## 技术栈
+## 部署说明
 
-### 前端 (choponefront)
+### 1. 准备工作
 
-- Vue 3.3.11
-- TypeScript 5.2.2
-- Vite 5.0.8
-- Vue Router 4.2.5
-- 原子化 CSS
+1. 确保已安装 Docker 和 Docker Compose
+2. 确保 Caddy 已经正确配置并运行
 
-### 后端 (choponeback)
+### 2. Caddy 配置
 
-- Python 3.11
-- Flask 2.3.3
-- PyPDF2[image] 3.0.1
-- Pillow 10.1.0
-- Flask-CORS 4.0.0
-- Gunicorn 21.2.0
+在 Caddy 配置文件中添加以下内容：
 
-## 开发环境设置
-
-### 前端开发
-
-1. 进入前端项目目录：
-
-```bash
-cd choponefront
 ```
-
-2. 安装依赖：
-
-```bash
-npm install
-```
-
-3. 启动开发服务器：
-
-```bash
-npm run dev
-```
-
-开发服务器默认运行在 http://localhost:5173
-
-4. 构建生产版本：
-
-```bash
-npm run build
-```
-
-构建后的文件将生成在 `dist` 目录中
-
-### 后端开发
-
-1. 进入后端项目目录：
-
-```bash
-cd choponeback
-```
-
-2. 创建并激活 Python 虚拟环境：
-
-```bash
-# 创建虚拟环境
-python -m venv venv
-
-# 激活虚拟环境
-# Windows PowerShell
-.\venv\Scripts\Activate.ps1
-# Windows CMD
-venv\Scripts\activate.bat
-# Linux/Mac
-source venv/bin/activate
-```
-
-3. 安装项目依赖：
-
-```bash
-pip install -r requirements.txt
-```
-
-4. 创建必要的目录：
-
-```bash
-# Windows
-mkdir uploads downloads
-# Linux/Mac
-mkdir -p uploads downloads
-```
-
-5. 运行开发服务器：
-
-```bash
-python run.py
-```
-
-开发服务器默认运行在 http://localhost:5000
-
-## 环境要求
-
-### 前端环境
-
-- Node.js 18+
-- npm 7+
-
-### 后端环境
-
-- Python 3.11+
-- pip
-- 虚拟环境工具 (venv)
-
-## API 文档
-
-### PDF 压缩 API
-
-#### POST /api/utility/compress-pdf
-
-压缩 PDF 文件
-
-请求参数：
-
-- `file`: PDF 文件 (multipart/form-data)
-- `compression_level`: 压缩级别 ('HIGH'|'MEDIUM'|'LOW')
-  - HIGH: 轻度压缩，保持较高质量
-  - MEDIUM: 标准压缩，平衡质量和大小
-  - LOW: 极限压缩，优先考虑文件大小
-
-响应示例：
-
-```json
-{
-  "success": true,
-  "message": "PDF compressed successfully",
-  "data": {
-    "file_path": "/api/download/compressed_example.pdf",
-    "original_size": 1000000,
-    "compressed_size": 500000,
-    "compression_ratio": "50.0%"
-  }
-}
-```
-
-## Docker 部署
-
-### 前置条件
-
-- Docker 20.10.0+
-- Docker Compose 2.0.0+
-- Caddy 2.0.0+（作为反向代理服务器）
-
-### 部署步骤
-
-1. 克隆项目到服务器：
-
-```bash
-git clone <repository-url>
-cd <project-directory>
-```
-
-2. 创建必要的目录：
-
-```bash
-# 创建数据目录
-mkdir -p data/uploads data/downloads
-```
-
-3. 在 Caddy 配置文件中添加反向代理规则：
-
-```caddyfile
-your-domain.com {
-    # 前端静态文件（Vue 构建后的文件）
-    # Docker volume 路径说明：
-    # - Linux 默认路径：/var/lib/docker/volumes/chopone_frontend_dist/_data
-    # - 使用 docker volume inspect chopone_frontend_dist 查看实际路径
-    root * /var/lib/docker/volumes/chopone_frontend_dist/_data
-    file_server
-    try_files {path} /index.html
-
-    # 后端 API 反向代理
+www.example.com {
     handle /api/* {
         reverse_proxy localhost:5000
     }
+
+    handle {
+        root * /srv/www
+        file_server
+        try_files {path} /index.html
+    }
+}
+
+chopone.com {
+    redir https://www.chopone.com{uri} permanent
 }
 ```
 
-4. 启动 Docker 服务：
+### 3. 创建必要的 Docker 卷
 
 ```bash
-# 首次启动（构建镜像并启动容器）
-docker-compose up -d --build
-
-# 后续启动（直接启动容器）
-docker-compose up -d
+docker volume create chopone_frontend_dist
 ```
 
-5. 验证服务状态：
+### 4. 部署服务
+
+1. 克隆项目：
 
 ```bash
-# 检查容器状态
-docker-compose ps
-
-# 检查服务日志
-docker-compose logs
+git clone <项目仓库地址>
+cd chopone
 ```
 
-### 目录说明
+2. 启动服务：
 
-Docker 部署会创建两个数据卷：
+```bash
+docker compose down
 
-- `chopone_frontend_dist`: 存储前端构建文件
-  - 实际路径：使用 `docker volume inspect chopone_frontend_dist` 查看
-- `chopone_data`: 存储 PDF 文件
-  - 上传文件目录：`/app/data/uploads`
-  - 下载文件目录：`/app/data/downloads`
-
-### 环境变量配置
-
-1. 前端环境变量
-   在 `choponefront/.env` 文件中配置：
-
-```env
-# 生产环境 API 地址
-VITE_API_BASE_URL=http://your-domain.com/api
+docker compose up -d
 ```
 
-2. 后端环境变量
-   在 `docker-compose.yml` 中已配置：
+3. 验证服务：
 
-- `FLASK_ENV`: 运行环境（默认：production）
-- `UPLOAD_FOLDER`: 上传文件存储路径（默认：/app/data/uploads）
-- `DOWNLOAD_FOLDER`: 下载文件存储路径（默认：/app/data/downloads）
+```bash
+# 检查服务状态
+docker compose ps
 
-### 维护操作说明
+# 检查后端健康状态
+curl http://localhost:5000/api/system/health
+```
 
-1. 查看服务日志：
+## 服务说明
+
+### 前端服务 (frontend)
+
+- 基于 Vue.js
+- 构建后的静态文件存储在 `chopone_frontend_dist` 卷中
+- 通过 Caddy 提供服务
+
+### 后端服务 (backend)
+
+- 基于 Flask
+- 使用 host 网络模式运行
+- 监听端口：5000
+- 提供 API 服务
+
+### 数据存储
+
+- 上传文件存储在 `data` 卷中
+- 文件会在 24 小时后自动清理
+
+## 维护操作
+
+### 查看日志
 
 ```bash
 # 查看所有服务日志
-docker-compose logs
+docker compose logs
 
-# 查看前端服务日志
-docker-compose logs frontend
-
-# 查看后端服务日志
-docker-compose logs backend
-
-# 实时查看日志
-docker-compose logs -f
+# 查看特定服务日志
+docker compose logs frontend
+docker compose logs backend
 ```
 
-2. 重启服务：
+### 重启服务
 
 ```bash
-# 重启所有服务
-docker-compose restart
-
-# 重启单个服务
-docker-compose restart frontend
-docker-compose restart backend
+docker compose restart
 ```
 
-3. 更新部署：
+### 更新服务
 
 ```bash
-# 1. 停止当前服务
-docker-compose down
-
-# 2. 拉取最新代码
+# 拉取最新代码
 git pull
 
-# 3. 重新构建并启动服务
-docker-compose up -d --build
+# 重新构建并启动服务
+docker compose up -d --build
 ```
 
-4. 数据管理：
+### 停止服务
 
 ```bash
-# 停止服务
-docker-compose down
-
-# 查看数据卷
-docker volume ls | grep chopone
-
-# 备份数据卷（如果需要）
-docker run --rm -v chopone_data:/source -v $(pwd)/backup:/backup alpine tar czf /backup/data.tar.gz -C /source .
-
-# 清理数据卷（谨慎使用）
-docker volume rm chopone_data
-docker volume rm chopone_frontend_dist
+docker compose down
 ```
 
-5. 故障排查：
+## 注意事项
 
-```bash
-# 检查容器状态
-docker-compose ps
+1. 确保 Caddy 容器能够访问 `chopone_frontend_dist` 卷
+2. 后端服务使用 host 网络模式，确保端口 5000 未被占用
+3. 上传的文件会在 24 小时后自动删除
+4. 确保服务器防火墙允许必要端口的访问（80/443）
 
-# 检查容器资源使用
-docker stats
+## 故障排除
 
-# 进入容器排查问题
-docker-compose exec frontend sh
-docker-compose exec backend sh
-```
+1. 如果无法访问 API：
 
-## 许可证
+   - 检查后端服务是否正常运行
+   - 验证 Caddy 配置是否正确
+   - 测试 `curl http://localhost:5000/api/system/health`
 
-MIT License
+2. 如果前端文件无法访问：
+   - 检查 `chopone_frontend_dist` 卷是否正确挂载
+   - 验证前端构建是否成功
+   - 检查 Caddy 的静态文件配置
+
+## 技术栈
+
+- 前端：Vue.js
+- 后端：Flask
+- 反向代理：Caddy
+- 容器化：Docker
+- 编排：Docker Compose

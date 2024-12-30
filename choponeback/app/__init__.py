@@ -18,14 +18,10 @@ def create_app(config_class=Config):
     # 初始化存储服务
     storage_service = StorageService()
     storage_service.init_app(app)  # 初始化应用实例
-    app.storage_service = storage_service  # 将存储服务添加到 app 实例
     
     # 确保目录存在
     storage_service.ensure_directory(app.config['UPLOAD_FOLDER'])
     storage_service.ensure_directory(app.config['DOWNLOAD_FOLDER'])
-    
-    # 启动清理任务
-    storage_service.start_cleanup_task()
     
     # Register blueprints
     from app.routes.utility_routes import utility_bp

@@ -11,30 +11,46 @@ class StorageService:
     
     _instance: Optional['StorageService'] = None
     _lock = threading.Lock()
-    _app = None
+    _cleanup_thread = None
+    _stop_cleanup = False
     
     def __new__(cls) -> 'StorageService':
         if not cls._instance:
             with cls._lock:
                 if not cls._instance:
                     cls._instance = super().__new__(cls)
-                    cls._instance.cleanup_thread = None
         return cls._instance
     
     def __init__(self):
         """初始化存储服务"""
-        # __new__ 已经处理了单例逻辑，这里不需要重复初始化
         pass
-    
+
     def init_app(self, app):
         """初始化应用实例"""
-        self._app = app
-    
-    def start_cleanup_task(self):
-        """启动清理任务"""
-        if not self.cleanup_thread or not self.cleanup_thread.is_alive():
-            self.cleanup_thread = threading.Thread(target=self._cleanup_task, daemon=True)
-            self.cleanup_thread.start()
+        if not hasattr(app, 'extensions'):
+            app.extensions = {}
+        app.extensions['storage_service'] = self
+
+        # 注册清理任务
+        def cleanup_files():
+            """定期清理文件的后台任务"""
+            with app.app_context():
+                while not self._stop_cleanup:
+                    try:
+                        folders = [
+                            app.config['UPLOAD_FOLDER'],
+                            app.config['DOWNLOAD_FOLDER']
+                        ]
+                        for folder in folders:
+                            self._cleanup_expired_files(folder)
+                    except Exception as e:
+                        app.logger.error(f"Error in cleanup task: {str(e)}")
+                    time.sleep(3600)  # 每小时执行一次
+
+        if not self._cleanup_thread or not self._cleanup_thread.is_alive():
+            self._stop_cleanup = False
+            self._cleanup_thread = threading.Thread(target=cleanup_files, daemon=True)
+            self._cleanup_thread.start()
     
     def save_file(self, file, filename: str, directory: str) -> str:
         """
@@ -129,21 +145,12 @@ class StorageService:
             if self.is_file_expired(file_path):
                 try:
                     self.delete_file(file_path)
-                    print(f"Removed expired file: {file_path}")
+                    current_app.logger.info(f"Removed expired file: {file_path}")
                 except Exception as e:
-                    print(f"Error removing file {file_path}: {str(e)}")
-    
-    def _cleanup_task(self) -> None:
-        """清理任务的主循环"""
-        while True:
-            try:
-                with self._app.app_context():
-                    folders = [
-                        current_app.config['UPLOAD_FOLDER'],
-                        current_app.config['DOWNLOAD_FOLDER']
-                    ]
-                    for folder in folders:
-                        self._cleanup_expired_files(folder)
-            except Exception as e:
-                print(f"Error in cleanup task: {str(e)}")
-            time.sleep(3600)  # 每小时执行一次 
+                    current_app.logger.error(f"Error removing file {file_path}: {str(e)}")
+
+    def stop_cleanup(self):
+        """停止清理任务"""
+        self._stop_cleanup = True
+        if self._cleanup_thread and self._cleanup_thread.is_alive():
+            self._cleanup_thread.join(timeout=1) 
