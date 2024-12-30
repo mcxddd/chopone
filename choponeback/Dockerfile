@@ -29,4 +29,4 @@ ENV FLASK_APP=app \
 EXPOSE 5000
 
 # 启动应用
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "app:create_app()"] 
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "app:create_app()"] 
