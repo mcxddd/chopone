@@ -17,7 +17,8 @@ services:
       dockerfile: Dockerfile
     network_mode: "host"
     volumes:
-      - data:/app/data
+      - ./data/uploads:/app/data/uploads
+      - ./data/downloads:/app/data/downloads
     environment:
       - FLASK_ENV=production
       - UPLOAD_FOLDER=/app/data/uploads
@@ -30,8 +31,6 @@ networks:
     name: chopone_network
 
 volumes:
-  data:
-    name: chopone_data
   frontend_dist:
     name: chopone_frontend_dist
     external: true

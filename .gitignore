@@ -50,4 +50,10 @@ downloads/
 
 # System Files
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# 项目数据目录
+/data/uploads/*
+/data/downloads/*
+!data/uploads/.gitkeep
+!data/downloads/.gitkeep 
