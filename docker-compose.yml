@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./choponefront
+      dockerfile: Dockerfile
+    volumes:
+      - frontend_dist:/app/dist
+    networks:
+      - chopone-network
+
+  backend:
+    build:
+      context: ./choponeback
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - data:/app/data
+    environment:
+      - FLASK_ENV=production
+      - UPLOAD_FOLDER=/app/data/uploads
+      - DOWNLOAD_FOLDER=/app/data/downloads
+    networks:
+      - chopone-network
+
+networks:
+  chopone-network:
+    driver: bridge
+
+volumes:
+  data:
+  frontend_dist:

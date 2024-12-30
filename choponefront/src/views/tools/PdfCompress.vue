@@ -100,18 +100,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useToast } from "@/composables/useToast";
+import type {
+  CompressionResult,
+  CompressionLevel,
+  QualityOption,
+} from "@/types/pdf";
 
 const { showToast } = useToast();
 
 const showError = (message: string) => showToast(message, "error");
 const showSuccess = (message: string) => showToast(message, "success");
-
-interface CompressionResult {
-  originalSize: string;
-  compressedSize: string;
-  compressionRatio: string;
-  downloadPath: string;
-}
 
 const selectedFile = ref<File | null>(null);
 const isCompressing = ref(false);
@@ -126,7 +124,7 @@ const formatFileSize = (bytes: number): string => {
   return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`;
 };
 
-const qualityOptions = [
+const qualityOptions: QualityOption[] = [
   {
     value: "HIGH",
     label: "轻度压缩",

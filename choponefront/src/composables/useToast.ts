@@ -22,13 +22,13 @@ export function useToast() {
     };
     toasts.value.push(toast);
 
-    // 3秒后自动移除
+    // 5秒后自动移除
     setTimeout(() => {
       const index = toasts.value.findIndex((t) => t.id === id);
       if (index > -1) {
         toasts.value.splice(index, 1);
       }
-    }, 3000);
+    }, 5000);
   };
 
   return {
