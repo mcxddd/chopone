@@ -12,3 +12,10 @@ export interface QualityOption {
   label: string;
   description: string;
 }
+
+export interface Toast {
+  message: string;
+  type: "success" | "error";
+  id: number;
+  duration?: number;
+}
