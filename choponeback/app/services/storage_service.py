@@ -11,6 +11,7 @@ class StorageService:
     
     _instance: Optional['StorageService'] = None
     _lock = threading.Lock()
+    _app = None
     
     def __new__(cls) -> 'StorageService':
         if not cls._instance:
@@ -24,6 +25,10 @@ class StorageService:
         """初始化存储服务"""
         # __new__ 已经处理了单例逻辑，这里不需要重复初始化
         pass
+    
+    def init_app(self, app):
+        """初始化应用实例"""
+        self._app = app
     
     def start_cleanup_task(self):
         """启动清理任务"""
@@ -132,12 +137,13 @@ class StorageService:
         """清理任务的主循环"""
         while True:
             try:
-                folders = [
-                    current_app.config['UPLOAD_FOLDER'],
-                    current_app.config['DOWNLOAD_FOLDER']
-                ]
-                for folder in folders:
-                    self._cleanup_expired_files(folder)
+                with self._app.app_context():
+                    folders = [
+                        current_app.config['UPLOAD_FOLDER'],
+                        current_app.config['DOWNLOAD_FOLDER']
+                    ]
+                    for folder in folders:
+                        self._cleanup_expired_files(folder)
             except Exception as e:
                 print(f"Error in cleanup task: {str(e)}")
-            time.sleep(3600)  # 每��时执行一次 
+            time.sleep(3600)  # 每小时执行一次 

@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   frontend:
     build:
@@ -13,16 +15,13 @@ services:
     build:
       context: ./choponeback
       dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
+    network_mode: "host"
     volumes:
       - data:/app/data
     environment:
       - FLASK_ENV=production
       - UPLOAD_FOLDER=/app/data/uploads
       - DOWNLOAD_FOLDER=/app/data/downloads
-    networks:
-      - chopone-network
     restart: unless-stopped
 
 networks:
