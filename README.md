@@ -129,6 +129,8 @@ git pull
 docker compose up -d --build
 ```
 
+test
+
 ### 停止服务
 
 ```bash
