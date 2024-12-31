@@ -7,8 +7,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - frontend_dist:/dist
-    networks:
-      - chopone-network
     restart: unless-stopped
 
   backend:
@@ -24,10 +22,6 @@ services:
       - UPLOAD_FOLDER=/app/data/uploads
       - DOWNLOAD_FOLDER=/app/data/downloads
     restart: unless-stopped
-
-networks:
-  chopone-network:
-    driver: bridge
 
 volumes:
   data:
