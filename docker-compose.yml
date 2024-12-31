@@ -5,16 +5,20 @@ services:
     build:
       context: ./choponefront
       dockerfile: Dockerfile
-    volumes:
-      - frontend_dist:/dist
+    networks:
+      - chopone_network
+    expose:
+      - "80"
     restart: unless-stopped
 
   backend:
     build:
       context: ./choponeback
       dockerfile: Dockerfile
-    ports:
-      - "127.0.0.1:5000:5000"
+    networks:
+      - chopone_network
+    expose:
+      - "5000"
     volumes:
       - data:/app/data
     environment:
@@ -24,9 +28,32 @@ services:
       - DOWNLOAD_FOLDER=/app/data/downloads
     restart: unless-stopped
 
+  caddy:
+    image: caddy:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - chopone_network
+      - host
+    network_mode: host
+    restart: unless-stopped
+
+networks:
+  chopone_network:
+    name: chopone_network
+  host:
+    external: true
+
 volumes:
   data:
     name: chopone_data
-  frontend_dist:
-    name: chopone_frontend_dist
-    external: true
+  caddy_data:
+    name: caddy_data
+  caddy_config:
+    name: caddy_config
