@@ -187,13 +187,19 @@ const startCompression = async () => {
     const response = await fetch("/api/utility/compress-pdf", {
       method: "POST",
       body: formData,
+    }).catch(() => {
+      throw new Error("无法连接到服务器，请检查网络连接或稍后重试");
     });
 
-    const result = await response.json();
-
     if (!response.ok) {
+      if (response.status === 0 || !navigator.onLine) {
+        throw new Error("网络连接失败，请检查网络连接后重试");
+      }
+      const result = await response.json();
       throw new Error(result.message || `请求失败: ${response.status}`);
     }
+
+    const result = await response.json();
 
     if (!result.success) {
       throw new Error(result.message || "PDF压缩失败");
@@ -225,15 +231,17 @@ const startCompression = async () => {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  background: #1a1a1a;
 }
 
 .compress-container {
   width: 100%;
   max-width: 800px;
-  background: white;
+  background: #1e1e1e;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .quality-options {
@@ -249,7 +257,7 @@ const startCompression = async () => {
   padding: 12px;
   cursor: pointer;
   transition: all 0.3s;
-  background: #1e1e1e;
+  background: #2d3436;
 }
 
 .quality-option.active {
@@ -280,13 +288,13 @@ const startCompression = async () => {
   padding: 40px;
   text-align: center;
   transition: all 0.3s;
-  background: #1e1e1e;
+  background: #2d3436;
   margin-bottom: 24px;
 }
 
 .upload-area.dragging {
   border-color: #6366f1;
-  background-color: rgba(99, 102, 241, 0.1);
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .upload-icon {
@@ -335,7 +343,7 @@ const startCompression = async () => {
   width: 100%;
   padding: 12px;
   background: #6366f1;
-  color: white;
+  color: #e2e8f0;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -349,14 +357,14 @@ const startCompression = async () => {
 }
 
 .compress-btn:disabled {
-  background: rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.3);
   cursor: not-allowed;
 }
 
 .result-card {
   text-align: center;
   padding: 32px;
-  background: #1e1e1e;
+  background: #2d3436;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
 }
@@ -430,7 +438,7 @@ const startCompression = async () => {
 
 .download-btn {
   background: #6366f1;
-  color: white;
+  color: #e2e8f0;
   text-decoration: none;
 }
 
@@ -451,16 +459,16 @@ const startCompression = async () => {
 .clear-btn {
   padding: 4px 12px;
   border-radius: 6px;
-  background: #ef4444;
-  color: white;
-  border: none;
+  background: rgba(239, 68, 68, 0.2);
+  color: #e2e8f0;
+  border: 1px solid rgba(239, 68, 68, 0.3);
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .clear-btn:hover {
-  background: #dc2626;
+  background: rgba(239, 68, 68, 0.3);
 }
 
 /* Mobile Responsive */

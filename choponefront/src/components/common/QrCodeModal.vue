@@ -43,12 +43,12 @@ defineEmits<{
   z-index: 1000;
 }
 
-.modal {
+.modal-content {
   background: #1e1e1e;
   border-radius: 12px;
   padding: 2rem;
   max-width: 90%;
-  width: 400px;
+  width: 500px;
   position: relative;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -104,6 +104,7 @@ defineEmits<{
 .qr-container {
   display: flex;
   gap: 2rem;
+  justify-content: center;
 }
 
 .qr-item {
@@ -113,24 +114,26 @@ defineEmits<{
 .temp-qr {
   width: 180px;
   height: 180px;
-  background: #f0f2f5;
-  border: 2px solid #3498db;
+  background: #2d3436;
+  border: 2px solid #6366f1;
   margin-bottom: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 8px;
 }
 
 .inner-square {
   width: 90px;
   height: 90px;
-  background: #3498db;
+  background: #6366f1;
   opacity: 0.6;
 }
 
 .qr-text {
-  color: #2c3e50;
+  color: #e2e8f0;
   font-size: 1.1rem;
+  margin-top: 0.5rem;
 }
 
 /* Mobile Responsive */
@@ -138,6 +141,7 @@ defineEmits<{
   .qr-container {
     flex-direction: column;
     gap: 1.5rem;
+    align-items: center;
   }
 
   .temp-qr {
@@ -157,6 +161,7 @@ defineEmits<{
 
   .modal-content {
     padding: 1.5rem;
+    margin: 1rem;
   }
 }
 </style>

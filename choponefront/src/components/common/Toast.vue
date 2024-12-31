@@ -8,7 +8,10 @@
           class="toast"
           :class="toast.type"
         >
-          {{ toast.message }}
+          <span class="toast-icon">{{
+            toast.type === "success" ? "✓" : "✕"
+          }}</span>
+          <span>{{ toast.message }}</span>
         </div>
       </TransitionGroup>
     </div>
@@ -24,27 +27,33 @@ const { toasts } = useToast();
 <style scoped>
 .toast-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-}
-
-.toast {
-  position: fixed;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 9999;
+  padding: 0 1rem;
+  width: 100%;
+  pointer-events: none;
+}
+
+.toast {
   padding: 0.8rem 1.5rem;
   border-radius: 8px;
   background: #1e1e1e;
   color: #e2e8f0;
   font-size: 0.9rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 300px;
+  max-width: 90vw;
+  margin: 0 auto;
+  pointer-events: auto;
 }
 
 .toast.success {
@@ -59,6 +68,7 @@ const { toasts } = useToast();
 
 .toast-icon {
   font-size: 1.2rem;
+  line-height: 1;
 }
 
 .toast.success .toast-icon {
@@ -75,13 +85,32 @@ const { toasts } = useToast();
   transition: all 0.3s ease;
 }
 
-.toast-enter-from {
-  transform: translateX(100%);
+.toast-enter-from,
+.toast-leave-to {
   opacity: 0;
+  transform: translateY(20px);
 }
 
-.toast-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .toast-container {
+    bottom: 1rem;
+  }
+
+  .toast {
+    min-width: unset;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .toast-icon {
+    font-size: 1.1rem;
+  }
+
+  .toast-enter-from,
+  .toast-leave-to {
+    transform: translateY(10px);
+  }
 }
 </style>
