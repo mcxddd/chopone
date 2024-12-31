@@ -6,6 +6,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# 生产阶段 - 这个阶段只包含构建产物
-FROM scratch
-COPY --from=builder /app/dist /dist 
+# 生产阶段
+FROM nginx:alpine
+COPY --from=builder /app/dist /dist
+CMD ["nginx", "-g", "daemon off;"] 
