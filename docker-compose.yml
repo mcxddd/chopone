@@ -28,32 +28,11 @@ services:
       - DOWNLOAD_FOLDER=/app/data/downloads
     restart: unless-stopped
 
-  caddy:
-    image: caddy:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
-      - ./Caddyfile:/etc/caddy/Caddyfile
-    networks:
-      - chopone_network
-      - host
-    network_mode: host
-    restart: unless-stopped
-
 networks:
   chopone_network:
     name: chopone_network
-  host:
     external: true
 
 volumes:
   data:
     name: chopone_data
-  caddy_data:
-    name: caddy_data
-  caddy_config:
-    name: caddy_config
