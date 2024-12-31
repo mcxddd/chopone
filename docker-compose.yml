@@ -30,7 +30,7 @@ services:
 
 networks:
   chopone_network:
-    name: chopone_network
+    external: true
 
 volumes:
   data:
