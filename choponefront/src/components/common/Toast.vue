@@ -30,24 +30,43 @@ const { toasts } = useToast();
 }
 
 .toast {
-  padding: 12px 24px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  color: white;
-  font-size: 14px;
-  min-width: 200px;
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  background: #1e1e1e;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  gap: 0.5rem;
 }
 
 .toast.success {
-  background-color: #67c23a;
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
 }
 
 .toast.error {
-  background-color: #f56c6c;
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.toast-icon {
+  font-size: 1.2rem;
+}
+
+.toast.success .toast-icon {
+  color: #10b981;
+}
+
+.toast.error .toast-icon {
+  color: #ef4444;
 }
 
 /* 过渡动画 */

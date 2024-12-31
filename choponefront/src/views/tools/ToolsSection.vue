@@ -63,15 +63,16 @@ const tools = [
 }
 
 .tool-card {
-  background: white;
+  background: #1e1e1e;
   border-radius: 12px;
   padding: 1.2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: all 0.3s;
   position: relative;
   overflow: hidden;
   width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tool-card::before {
@@ -81,26 +82,28 @@ const tools = [
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #3498db, #2c3e50);
+  background: linear-gradient(90deg, #6366f1, #a855f7);
 }
 
 .tool-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 .tool-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  color: #6366f1;
 }
 
 .tool-card h3 {
-  color: #2c3e50;
+  color: #e2e8f0;
   margin-bottom: 0.5rem;
 }
 
 .tool-card p {
-  color: #666;
+  color: #94a3b8;
   font-size: 0.9rem;
   line-height: 1.5;
 }

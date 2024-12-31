@@ -72,7 +72,8 @@ const toggleSidebar = () => {
   right: 0;
   height: 56px;
   z-index: 100;
-  background: linear-gradient(120deg, #2c3e50 0%, #3498db 100%);
+  background: linear-gradient(120deg, #1e1e1e 0%, #2d3436 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .header-content {
@@ -91,7 +92,7 @@ const toggleSidebar = () => {
 }
 
 .logo {
-  color: white;
+  color: #e2e8f0;
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 2px;
@@ -102,7 +103,7 @@ const toggleSidebar = () => {
 }
 
 .logo:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(99, 102, 241, 0.1);
 }
 
 /* Desktop Navigation */
@@ -117,7 +118,7 @@ const toggleSidebar = () => {
 }
 
 .nav-link {
-  color: white;
+  color: #e2e8f0;
   font-size: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -134,7 +135,7 @@ const toggleSidebar = () => {
   transform: translateX(-50%);
   width: 0;
   height: 2px;
-  background: white;
+  background: #6366f1;
   transition: width 0.3s;
 }
 
@@ -161,7 +162,7 @@ const toggleSidebar = () => {
   display: block;
   width: 20px;
   height: 2px;
-  background: white;
+  background: #e2e8f0;
   position: relative;
   transition: all 0.3s ease;
 }
@@ -172,7 +173,7 @@ const toggleSidebar = () => {
   position: absolute;
   width: 20px;
   height: 2px;
-  background: white;
+  background: #e2e8f0;
   transition: all 0.3s ease;
 }
 
@@ -206,11 +207,11 @@ const toggleSidebar = () => {
   left: -140px;
   width: 140px;
   height: 100vh;
-  background: linear-gradient(120deg, #2c3e50 0%, #3498db 100%);
+  background: linear-gradient(120deg, #1e1e1e 0%, #2d3436 100%);
   z-index: 101;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding-top: 56px;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar-open {
@@ -243,7 +244,7 @@ const toggleSidebar = () => {
 }
 
 .sidebar-nav-link {
-  color: white;
+  color: #e2e8f0;
   text-decoration: none;
   font-size: 0.95rem;
   display: block;
@@ -253,7 +254,7 @@ const toggleSidebar = () => {
 }
 
 .sidebar-nav-link:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(99, 102, 241, 0.1);
   transform: translateX(4px);
 }
 

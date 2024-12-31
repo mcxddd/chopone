@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IntroSection from "../components/sections/IntroSection.vue";
+import IntroSection from "./home/IntroSection.vue";
 </script>
 
 <template>
@@ -7,3 +7,12 @@ import IntroSection from "../components/sections/IntroSection.vue";
     <IntroSection />
   </div>
 </template>
+
+<style scoped>
+.home {
+  background: #1a1a1a;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+</style>

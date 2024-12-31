@@ -244,16 +244,17 @@ const startCompression = async () => {
 }
 
 .quality-option {
-  border: 2px solid #e2e8f0;
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 12px;
   cursor: pointer;
   transition: all 0.3s;
+  background: #1e1e1e;
 }
 
 .quality-option.active {
-  border-color: #409eff;
-  background: #f0f9ff;
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .quality-option .option-header {
@@ -263,35 +264,35 @@ const startCompression = async () => {
 .quality-option .option-title {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: #e2e8f0;
 }
 
 .quality-option .option-description {
   font-size: 0.8rem;
-  color: #64748b;
+  color: #94a3b8;
   line-height: 1.3;
   margin-top: 4px;
 }
 
 .upload-area {
-  border: 2px dashed #e2e8f0;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 40px;
   text-align: center;
   transition: all 0.3s;
-  background: #f8fafc;
+  background: #1e1e1e;
   margin-bottom: 24px;
 }
 
 .upload-area.dragging {
-  border-color: #409eff;
-  background-color: rgba(64, 158, 255, 0.05);
+  border-color: #6366f1;
+  background-color: rgba(99, 102, 241, 0.1);
 }
 
 .upload-icon {
   font-size: 48px;
   margin-bottom: 16px;
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .upload-prompt {
@@ -299,7 +300,7 @@ const startCompression = async () => {
 }
 
 .upload-prompt .text {
-  color: #64748b;
+  color: #94a3b8;
   margin-bottom: 8px;
 }
 
@@ -322,18 +323,18 @@ const startCompression = async () => {
 
 .file-name {
   font-weight: 500;
-  color: #2c3e50;
+  color: #e2e8f0;
 }
 
 .file-size {
-  color: #64748b;
+  color: #94a3b8;
   font-size: 0.9rem;
 }
 
 .compress-btn {
   width: 100%;
   padding: 12px;
-  background: #409eff;
+  background: #6366f1;
   color: white;
   border: none;
   border-radius: 8px;
@@ -343,14 +344,21 @@ const startCompression = async () => {
   transition: all 0.3s;
 }
 
+.compress-btn:hover {
+  background: #4f46e5;
+}
+
 .compress-btn:disabled {
-  background: #a0cfff;
+  background: rgba(99, 102, 241, 0.5);
   cursor: not-allowed;
 }
 
 .result-card {
   text-align: center;
   padding: 32px;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
 }
 
 .result-header {
@@ -364,7 +372,7 @@ const startCompression = async () => {
 }
 
 .result-header h3 {
-  color: #2c3e50;
+  color: #e2e8f0;
   font-size: 1.5rem;
   margin: 0;
 }
@@ -382,20 +390,20 @@ const startCompression = async () => {
 }
 
 .arrow {
-  color: #64748b;
+  color: #94a3b8;
   font-size: 24px;
 }
 
 .size-label,
 .ratio-label {
-  color: #64748b;
+  color: #94a3b8;
   font-size: 0.9rem;
   margin-bottom: 4px;
 }
 
 .size-value,
 .ratio-value {
-  color: #2c3e50;
+  color: #e2e8f0;
   font-size: 1.2rem;
   font-weight: 600;
 }
@@ -421,23 +429,23 @@ const startCompression = async () => {
 }
 
 .download-btn {
-  background: #10b981;
+  background: #6366f1;
   color: white;
   text-decoration: none;
 }
 
 .download-btn:hover {
-  background: #059669;
+  background: #4f46e5;
 }
 
 .new-file-btn {
-  background: #f1f5f9;
-  color: #64748b;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
   border: none;
 }
 
 .new-file-btn:hover {
-  background: #e2e8f0;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .clear-btn {
