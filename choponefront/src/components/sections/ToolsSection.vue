@@ -10,6 +10,24 @@ const tools = [
     description: "在线压缩PDF文件，快速且保持质量",
     icon: "📄",
   },
+  {
+    id: "future-tool-1",
+    name: "未来小工具1",
+    description: "正在开发中...",
+    icon: "🔨",
+  },
+  {
+    id: "future-tool-2",
+    name: "未来小工具2",
+    description: "正在开发中...",
+    icon: "🛠️",
+  },
+  {
+    id: "future-tool-3",
+    name: "未来小工具3",
+    description: "正在开发中...",
+    icon: "⚙️",
+  },
 ];
 </script>
 
@@ -32,26 +50,28 @@ const tools = [
 
 <style scoped>
 .tools {
-  padding: 2rem;
-  max-width: 1200px;
+  padding: 1rem;
+  max-width: 800px;
   margin: 0 auto;
 }
 
 .tools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  width: 100%;
 }
 
 .tool-card {
   background: white;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1.2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: all 0.3s;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .tool-card::before {
@@ -83,5 +103,54 @@ const tools = [
   color: #666;
   font-size: 0.9rem;
   line-height: 1.5;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tools {
+    padding: 0.8rem;
+  }
+
+  .tools-grid {
+    gap: 0.8rem;
+  }
+
+  .tool-card {
+    padding: 1rem;
+  }
+
+  .tool-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tool-card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .tool-card p {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+}
+
+/* Remove the single column layout for extra small devices */
+@media (max-width: 360px) {
+  .tool-card {
+    padding: 0.8rem;
+  }
+
+  .tool-icon {
+    font-size: 1.8rem;
+  }
+
+  .tool-card h3 {
+    font-size: 0.9rem;
+  }
+
+  .tool-card p {
+    font-size: 0.75rem;
+  }
 }
 </style>

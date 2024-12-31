@@ -81,4 +81,31 @@ defineEmits<{
   color: #2c3e50;
   font-size: 1.1rem;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .qr-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .temp-qr {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 0.8rem;
+  }
+
+  .inner-square {
+    width: 75px;
+    height: 75px;
+  }
+
+  .qr-text {
+    font-size: 1rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+  }
+}
 </style>

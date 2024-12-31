@@ -238,7 +238,7 @@ const startCompression = async () => {
 
 .quality-options {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-bottom: 24px;
 }
@@ -453,5 +453,51 @@ const startCompression = async () => {
 
 .clear-btn:hover {
   background: #dc2626;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .compress-container {
+    padding: 20px;
+  }
+
+  .quality-options {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .quality-option {
+    padding: 10px;
+  }
+
+  .quality-option .option-title {
+    font-size: 0.95rem;
+  }
+
+  .quality-option .option-description {
+    font-size: 0.85rem;
+  }
+
+  .upload-area {
+    padding: 20px;
+  }
+
+  .upload-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .result-card {
+    padding: 20px;
+  }
+
+  .size-comparison {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+  }
 }
 </style>

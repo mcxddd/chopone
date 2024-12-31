@@ -16,51 +16,54 @@ import ToolsSection from "../components/sections/ToolsSection.vue";
 
 <style scoped>
 .tools-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 56px);
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 56px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  background: #f8f9fa;
 }
 
 .tools-header {
   background: linear-gradient(120deg, #2c3e50 0%, #3498db 100%);
-  padding: 2rem;
+  padding: 1.2rem;
   text-align: center;
   color: white;
 }
 
 .tools-header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .tools-header p {
-  font-size: 1.1rem;
+  font-size: 1rem;
   opacity: 0.9;
   margin: 0;
 }
 
 .tools-container {
   flex: 1;
-  background: #f8f9fa;
   display: flex;
   align-items: flex-start;
+  padding: 1rem 0;
 }
 
 :deep(.tools) {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
-:deep(.tools-grid) {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tools-header {
+    padding: 1rem;
+  }
+
+  .tools-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .tools-header p {
+    font-size: 0.9rem;
+  }
 }
 </style>

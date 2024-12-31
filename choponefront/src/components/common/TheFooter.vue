@@ -18,7 +18,7 @@ const isQrModalOpen = ref(false);
 <style scoped>
 .footer {
   background: linear-gradient(120deg, #2c3e50 0%, #3498db 100%);
-  padding: 1.5rem;
+  padding: 0.8rem;
   color: white;
 }
 
@@ -26,15 +26,15 @@ const isQrModalOpen = ref(false);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .footer-link {
   color: white;
   text-decoration: none;
   position: relative;
-  padding: 0.5rem 0;
-  font-size: 0.9rem;
+  padding: 0.3rem 0;
+  font-size: 0.85rem;
   line-height: 1;
 }
 
@@ -56,5 +56,21 @@ a.footer-link::after {
 
 a.footer-link:hover::after {
   width: 100%;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .footer {
+    padding: 1rem;
+  }
+
+  .footer-content {
+    gap: 1.5rem;
+  }
+
+  .footer-link {
+    font-size: 0.85rem;
+    padding: 0.3rem 0;
+  }
 }
 </style>
