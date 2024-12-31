@@ -44,16 +44,15 @@ __pycache__/
 venv/
 ENV/
 
-# Upload and download directories
-uploads/
-downloads/
+# Data directories
+data/*
+!data/uploads/
+!data/downloads/
+data/uploads/*
+data/downloads/*
+!data/uploads/.gitkeep
+!data/downloads/.gitkeep
 
 # System Files
 .DS_Store
-Thumbs.db
-
-# 项目数据目录
-/data/uploads/*
-/data/downloads/*
-!data/uploads/.gitkeep
-!data/downloads/.gitkeep 
+Thumbs.db 

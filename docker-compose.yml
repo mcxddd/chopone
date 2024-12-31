@@ -19,6 +19,7 @@ services:
       - data:/app/data
     environment:
       - FLASK_ENV=production
+      - DATA_DIR=/app/data
       - UPLOAD_FOLDER=/app/data/uploads
       - DOWNLOAD_FOLDER=/app/data/downloads
     restart: unless-stopped

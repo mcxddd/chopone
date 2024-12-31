@@ -6,7 +6,6 @@ from dataclasses import asdict
 from urllib.parse import quote
 
 utility_bp = Blueprint('utility', __name__)
-pdf_service = PdfService()
 
 @utility_bp.route('/api/utility/compress-pdf', methods=['POST'])
 def compress_pdf_route():
@@ -30,6 +29,7 @@ def compress_pdf_route():
             return asdict(ApiResponse(False, "Invalid compression level")), 400
         
         # 执行压缩
+        pdf_service = PdfService()
         result = pdf_service.compress_pdf(file, compression_level)
         
         # URL编码文件名，确保中文正确显示

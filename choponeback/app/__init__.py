@@ -11,15 +11,13 @@ def create_app(config_class=Config):
     # Enable CORS
     CORS(app)
     
-    # 配置上传和下载目录（使用环境变量或默认值）
-    app.config['UPLOAD_FOLDER'] = os.environ.get('UPLOAD_FOLDER', '/app/data/uploads')
-    app.config['DOWNLOAD_FOLDER'] = os.environ.get('DOWNLOAD_FOLDER', '/app/data/downloads')
-    
     # 初始化存储服务
     storage_service = StorageService()
-    storage_service.init_app(app)  # 初始化应用实例
+    storage_service.init_app(app)
+    app.storage_service = storage_service
     
-    # 确保目录存在
+    # 确保数据目录存在
+    os.makedirs(app.config['DATA_DIR'], exist_ok=True)
     storage_service.ensure_directory(app.config['UPLOAD_FOLDER'])
     storage_service.ensure_directory(app.config['DOWNLOAD_FOLDER'])
     
