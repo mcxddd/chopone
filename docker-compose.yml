@@ -5,20 +5,14 @@ services:
     build:
       context: ./choponefront
       dockerfile: Dockerfile
-    networks:
-      - chopone_network
-    expose:
-      - "80"
+    network_mode: host
     restart: unless-stopped
 
   backend:
     build:
       context: ./choponeback
       dockerfile: Dockerfile
-    networks:
-      - chopone_network
-    expose:
-      - "5000"
+    network_mode: host
     volumes:
       - data:/app/data
     environment:
@@ -27,11 +21,6 @@ services:
       - UPLOAD_FOLDER=/app/data/uploads
       - DOWNLOAD_FOLDER=/app/data/downloads
     restart: unless-stopped
-
-networks:
-  chopone_network:
-    name: chopone_network
-    external: true
 
 volumes:
   data:
