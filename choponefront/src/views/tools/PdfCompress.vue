@@ -187,13 +187,19 @@ const startCompression = async () => {
     const response = await fetch("/api/utility/compress-pdf", {
       method: "POST",
       body: formData,
+    }).catch(() => {
+      throw new Error("无法连接到服务器，请检查网络连接或稍后重试");
     });
 
-    const result = await response.json();
-
     if (!response.ok) {
+      if (response.status === 0 || !navigator.onLine) {
+        throw new Error("网络连接失败，请检查网络连接后重试");
+      }
+      const result = await response.json();
       throw new Error(result.message || `请求失败: ${response.status}`);
     }
+
+    const result = await response.json();
 
     if (!result.success) {
       throw new Error(result.message || "PDF压缩失败");
@@ -225,35 +231,38 @@ const startCompression = async () => {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  background: #1a1a1a;
 }
 
 .compress-container {
   width: 100%;
   max-width: 800px;
-  background: white;
+  background: #1e1e1e;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .quality-options {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-bottom: 24px;
 }
 
 .quality-option {
-  border: 2px solid #e2e8f0;
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 12px;
   cursor: pointer;
   transition: all 0.3s;
+  background: #2d3436;
 }
 
 .quality-option.active {
-  border-color: #409eff;
-  background: #f0f9ff;
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .quality-option .option-header {
@@ -263,35 +272,35 @@ const startCompression = async () => {
 .quality-option .option-title {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: #e2e8f0;
 }
 
 .quality-option .option-description {
   font-size: 0.8rem;
-  color: #64748b;
+  color: #94a3b8;
   line-height: 1.3;
   margin-top: 4px;
 }
 
 .upload-area {
-  border: 2px dashed #e2e8f0;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 40px;
   text-align: center;
   transition: all 0.3s;
-  background: #f8fafc;
+  background: #2d3436;
   margin-bottom: 24px;
 }
 
 .upload-area.dragging {
-  border-color: #409eff;
-  background-color: rgba(64, 158, 255, 0.05);
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .upload-icon {
   font-size: 48px;
   margin-bottom: 16px;
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .upload-prompt {
@@ -299,7 +308,7 @@ const startCompression = async () => {
 }
 
 .upload-prompt .text {
-  color: #64748b;
+  color: #94a3b8;
   margin-bottom: 8px;
 }
 
@@ -322,19 +331,19 @@ const startCompression = async () => {
 
 .file-name {
   font-weight: 500;
-  color: #2c3e50;
+  color: #e2e8f0;
 }
 
 .file-size {
-  color: #64748b;
+  color: #94a3b8;
   font-size: 0.9rem;
 }
 
 .compress-btn {
   width: 100%;
   padding: 12px;
-  background: #409eff;
-  color: white;
+  background: #6366f1;
+  color: #e2e8f0;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -343,14 +352,21 @@ const startCompression = async () => {
   transition: all 0.3s;
 }
 
+.compress-btn:hover {
+  background: #4f46e5;
+}
+
 .compress-btn:disabled {
-  background: #a0cfff;
+  background: rgba(99, 102, 241, 0.3);
   cursor: not-allowed;
 }
 
 .result-card {
   text-align: center;
   padding: 32px;
+  background: #2d3436;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
 }
 
 .result-header {
@@ -364,7 +380,7 @@ const startCompression = async () => {
 }
 
 .result-header h3 {
-  color: #2c3e50;
+  color: #e2e8f0;
   font-size: 1.5rem;
   margin: 0;
 }
@@ -382,20 +398,20 @@ const startCompression = async () => {
 }
 
 .arrow {
-  color: #64748b;
+  color: #94a3b8;
   font-size: 24px;
 }
 
 .size-label,
 .ratio-label {
-  color: #64748b;
+  color: #94a3b8;
   font-size: 0.9rem;
   margin-bottom: 4px;
 }
 
 .size-value,
 .ratio-value {
-  color: #2c3e50;
+  color: #e2e8f0;
   font-size: 1.2rem;
   font-weight: 600;
 }
@@ -421,37 +437,83 @@ const startCompression = async () => {
 }
 
 .download-btn {
-  background: #10b981;
-  color: white;
+  background: #6366f1;
+  color: #e2e8f0;
   text-decoration: none;
 }
 
 .download-btn:hover {
-  background: #059669;
+  background: #4f46e5;
 }
 
 .new-file-btn {
-  background: #f1f5f9;
-  color: #64748b;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
   border: none;
 }
 
 .new-file-btn:hover {
-  background: #e2e8f0;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .clear-btn {
   padding: 4px 12px;
   border-radius: 6px;
-  background: #ef4444;
-  color: white;
-  border: none;
+  background: rgba(239, 68, 68, 0.2);
+  color: #e2e8f0;
+  border: 1px solid rgba(239, 68, 68, 0.3);
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .clear-btn:hover {
-  background: #dc2626;
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .compress-container {
+    padding: 20px;
+  }
+
+  .quality-options {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .quality-option {
+    padding: 10px;
+  }
+
+  .quality-option .option-title {
+    font-size: 0.95rem;
+  }
+
+  .quality-option .option-description {
+    font-size: 0.85rem;
+  }
+
+  .upload-area {
+    padding: 20px;
+  }
+
+  .upload-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .result-card {
+    padding: 20px;
+  }
+
+  .size-comparison {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+  }
 }
 </style>

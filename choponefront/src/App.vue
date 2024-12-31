@@ -26,8 +26,8 @@ body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f0f2f5;
+  color: #e2e8f0;
+  background-color: #1a1a1a;
 }
 
 .app {
@@ -43,8 +43,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(120deg, #2c3e50 0%, #3498db 100%);
-  opacity: 0.05;
+  background: linear-gradient(120deg, #1a1a1a 0%, #2d3436 100%);
+  opacity: 0.8;
   z-index: -1;
   clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
 }
@@ -77,9 +77,9 @@ h6 {
 }
 
 .low-poly-card {
-  background: white;
+  background: #1e1e1e;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -91,6 +91,6 @@ h6 {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #3498db, #2c3e50);
+  background: linear-gradient(90deg, #6366f1, #a855f7);
 }
 </style>
