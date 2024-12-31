@@ -15,10 +15,10 @@ services:
     build:
       context: ./choponeback
       dockerfile: Dockerfile
-    network_mode: "host"
+    ports:
+      - "127.0.0.1:5000:5000"
     volumes:
-      - ./data/uploads:/app/data/uploads
-      - ./data/downloads:/app/data/downloads
+      - data:/app/data
     environment:
       - FLASK_ENV=production
       - UPLOAD_FOLDER=/app/data/uploads
@@ -28,9 +28,10 @@ services:
 networks:
   chopone-network:
     driver: bridge
-    name: chopone_network
 
 volumes:
+  data:
+    name: chopone_data
   frontend_dist:
     name: chopone_frontend_dist
     external: true
