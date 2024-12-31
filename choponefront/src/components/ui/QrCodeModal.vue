@@ -16,13 +16,13 @@ defineEmits<{
           <div class="temp-qr">
             <div class="inner-square"></div>
           </div>
-          <p class="qr-text">微信</p>
+          <p class="qr-text">二维码</p>
         </div>
         <div class="qr-item">
           <div class="temp-qr">
             <div class="inner-square"></div>
           </div>
-          <p class="qr-text">请我一杯咖啡</p>
+          <p class="qr-text">请我一杯奶茶</p>
         </div>
       </div>
     </div>

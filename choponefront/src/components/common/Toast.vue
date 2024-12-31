@@ -17,7 +17,6 @@
 
 <script setup lang="ts">
 import { useToast } from "@/composables/useToast";
-import type { Toast } from "@/types/pdf";
 
 const { toasts } = useToast();
 </script>

@@ -4,7 +4,7 @@ import { ref } from "vue";
 const menuItems = ref([
   { name: "首页", path: "/" },
   { name: "小工具", path: "/tools" },
-  { name: "关于我们", path: "/404" },
+  { name: "关于", path: "/404" },
 ]);
 </script>
 
