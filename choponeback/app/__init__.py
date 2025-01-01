@@ -8,8 +8,11 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
     
-    # Enable CORS
-    CORS(app)
+    # 设置 session secret key
+    app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key')
+    
+    # Enable CORS with support for credentials
+    CORS(app, supports_credentials=True)
     
     # 初始化存储服务
     storage_service = StorageService()
@@ -25,9 +28,11 @@ def create_app(config_class=Config):
     from app.routes.utility_routes import utility_bp
     from app.routes.system_routes import system_bp
     from app.routes.download_routes import download_bp
+    from app.routes.ai_routes import ai_bp
     
     app.register_blueprint(utility_bp)
     app.register_blueprint(system_bp)
     app.register_blueprint(download_bp)
+    app.register_blueprint(ai_bp)
     
     return app 
