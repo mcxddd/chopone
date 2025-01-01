@@ -35,7 +35,7 @@ const messagesContainer = ref<HTMLElement | null>(null);
 const sendMessage = async () => {
   if (!userInput.value.trim()) return;
 
-  // 添加用户消息
+  // 添加用户消息到本地显示
   messages.value.push({
     type: "user",
     content: userInput.value,
@@ -56,6 +56,7 @@ const sendMessage = async () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ message }),
     });
 
@@ -68,7 +69,7 @@ const sendMessage = async () => {
     // 移除加载状态消息
     messages.value = messages.value.filter((msg) => msg.type !== "loading");
 
-    // 添加 AI 回复
+    // 添加 AI 回复到本地显示
     messages.value.push({
       type: "ai",
       content: data.data.reply,

@@ -2,16 +2,24 @@ from flask import Flask, current_app
 from flask_cors import CORS
 from config.config import Config
 import os
+import secrets
+from datetime import timedelta
 from app.services.storage_service import StorageService
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
     
-    # 设置 session secret key
-    app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key')
+    # 生成随机的 secret key
+    app.secret_key = secrets.token_hex(32)
     
-    # Enable CORS with support for credentials
+    # 配置 session
+    app.config.update(
+        PERMANENT_SESSION_LIFETIME=timedelta(hours=12),  # 12小时后过期
+        SESSION_PERMANENT=True  # 启用永久 session
+    )
+    
+    # 启用 CORS，允许跨域请求携带 Cookie
     CORS(app, supports_credentials=True)
     
     # 初始化存储服务

@@ -2,12 +2,11 @@ from flask import Blueprint, request, session
 from app.utils.response_utils import create_response
 import requests
 import os
-import json
 
 ai_bp = Blueprint('ai', __name__)
 
 # 最大保留的对话轮数
-MAX_CONVERSATION_TURNS = 10
+MAX_CONVERSATION_TURNS = 40
 
 @ai_bp.route('/api/ai/chat', methods=['POST'])
 def chat():
