@@ -4,7 +4,7 @@ import { ref } from "vue";
 const menuItems = ref([
   { name: "首页", path: "/" },
   { name: "工具", path: "/tools" },
-  { name: "AI 助手", path: "/aichat" },
+  { name: "AI 对话", path: "/aichat" },
   { name: "关于", path: "/404" },
 ]);
 

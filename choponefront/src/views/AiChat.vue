@@ -95,7 +95,7 @@ const sendMessage = async () => {
 onMounted(() => {
   messages.value.push({
     type: "ai",
-    content: "你好！我是 AI 助手，有什么我可以帮你的吗？",
+    content: "你好！我是GPT-4o-mini，有什么我可以帮你的吗？",
   });
 });
 </script>
