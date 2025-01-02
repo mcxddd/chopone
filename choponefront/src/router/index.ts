@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/home/Home.vue";
 import NotFound from "../views/NotFound.vue";
 import Tools from "../views/tools/ToolsView.vue";
-import PdfCompress from "../views/tools/pdf-compress/PdfCompressView.vue";
 import AiChat from "../views/aichat/AiChat.vue";
 
 const router = createRouter({
@@ -17,11 +16,6 @@ const router = createRouter({
       path: "/tools",
       name: "tools",
       component: Tools,
-    },
-    {
-      path: "/tools/pdf-compress",
-      name: "pdf-compress",
-      component: PdfCompress,
     },
     {
       path: "/aichat",

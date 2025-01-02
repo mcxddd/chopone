@@ -3,8 +3,8 @@ import time
 import threading
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
-from flask import current_app
-from typing import BinaryIO, Optional
+from flask import current_app, send_file
+from typing import BinaryIO, Optional, Tuple
 
 class StorageService:
     """文件存储服务，处理文件的存储、获取、清理和维护"""
@@ -52,7 +52,78 @@ class StorageService:
             self._cleanup_thread = threading.Thread(target=cleanup_files, daemon=True)
             self._cleanup_thread.start()
     
-    def save_file(self, file, filename: str, directory: str) -> str:
+    def upload_file(self, file: BinaryIO, allowed_extensions: set = None) -> Tuple[bool, str, str]:
+        """
+        上传文件
+        Args:
+            file: 文件对象
+            allowed_extensions: 允许的文件扩展名集合
+        Returns:
+            (成功标志, 消息, 文件路径)
+        """
+        try:
+            if not file:
+                return False, "No file provided", ""
+                
+            if not hasattr(file, 'filename') or not file.filename:
+                return False, "Invalid file object", ""
+                
+            filename = secure_filename(file.filename)
+            if not filename:
+                return False, "Invalid filename", ""
+                
+            # 检查文件扩展名
+            if allowed_extensions:
+                ext = os.path.splitext(filename)[1].lower()[1:]
+                if ext not in allowed_extensions:
+                    return False, f"File type not allowed. Allowed types: {', '.join(allowed_extensions)}", ""
+            
+            try:
+                # 保存文件
+                filepath = self.save_file(file, filename, current_app.config['UPLOAD_FOLDER'])
+                return True, "File uploaded successfully", filepath
+            except OSError as e:
+                return False, f"Failed to save file: {str(e)}", ""
+            except Exception as e:
+                return False, f"Unexpected error while saving file: {str(e)}", ""
+            
+        except Exception as e:
+            return False, f"Upload failed: {str(e)}", ""
+    
+    def download_file(self, filename: str) -> Tuple[bool, str, Optional[str]]:
+        """
+        下载文件
+        Args:
+            filename: 文件名
+        Returns:
+            (成功标志, 消息, 文件路径或None)
+        """
+        try:
+            if not filename:
+                return False, "No filename provided", None
+                
+            # 构建完整路径
+            filepath = os.path.join(current_app.config['DOWNLOAD_FOLDER'], filename)
+            
+            if not os.path.exists(filepath):
+                return False, "File not found", None
+                
+            if not os.path.isfile(filepath):
+                return False, "Path exists but is not a file", None
+                
+            try:
+                # 检查文件是否可读
+                with open(filepath, 'rb'):
+                    pass
+            except IOError:
+                return False, "File exists but is not accessible", None
+                
+            return True, "File ready for download", filepath
+            
+        except Exception as e:
+            return False, f"Download failed: {str(e)}", None
+    
+    def save_file(self, file: BinaryIO, filename: str, directory: str) -> str:
         """
         保存文件到指定目录
         Args:
@@ -61,31 +132,27 @@ class StorageService:
             directory: 目标目录
         Returns:
             str: 保存后的文件路径
+        Raises:
+            OSError: 当创建目录或保存文件失败时
         """
         if not os.path.exists(directory):
             os.makedirs(directory)
             
-        # 确保文件名是字符串类型
         if not isinstance(filename, str):
             filename = str(filename)
             
-        # 构建完整的文件路径
         filepath = os.path.join(directory, filename)
         
-        # 保存文件
+        # 如果文件已存在，先删除
+        if os.path.exists(filepath):
+            os.remove(filepath)
+            
         file.save(filepath)
-        
         return filepath
     
     @staticmethod
     def delete_file(file_path: str) -> bool:
-        """
-        删除文件
-        Args:
-            file_path: 文件路径
-        Returns:
-            是否成功删除
-        """
+        """删除文件"""
         try:
             if os.path.exists(file_path):
                 os.remove(file_path)
@@ -96,34 +163,17 @@ class StorageService:
     
     @staticmethod
     def get_file_size(file_path: str) -> int:
-        """
-        获取文件大小
-        Args:
-            file_path: 文件路径
-        Returns:
-            文件大小（字节）
-        """
+        """获取文件大小"""
         return os.path.getsize(file_path)
     
     @staticmethod
     def ensure_directory(directory: str) -> None:
-        """
-        确保目录存在
-        Args:
-            directory: 目录路径
-        """
+        """确保目录存在"""
         os.makedirs(directory, exist_ok=True)
     
     @staticmethod
     def is_file_expired(file_path: str, hours: int = 24) -> bool:
-        """
-        检查文件是否过期
-        Args:
-            file_path: 文件路径
-            hours: 过期时间（小时）
-        Returns:
-            是否过期
-        """
+        """检查文件是否过期"""
         if not os.path.exists(file_path):
             return False
         
@@ -132,11 +182,7 @@ class StorageService:
         return datetime.now() - file_datetime > timedelta(hours=hours)
     
     def _cleanup_expired_files(self, folder: str) -> None:
-        """
-        清理指定文件夹中的过期文件
-        Args:
-            folder: 文件夹路径
-        """
+        """清理指定文件夹中的过期文件"""
         if not os.path.exists(folder):
             return
             

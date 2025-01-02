@@ -1,44 +1,50 @@
-from flask import Blueprint, request, current_app
-from app.services.pdf_service import PdfService
-from app.models.pdf_dto import CompressionLevel, ApiResponse
-import os
-from dataclasses import asdict
-from urllib.parse import quote
+from flask import Blueprint, request, current_app, send_file
+from app.utils.response_utils import create_response
 
 utility_bp = Blueprint('utility', __name__)
 
-@utility_bp.route('/api/utility/compress-pdf', methods=['POST'])
-def compress_pdf_route():
+@utility_bp.route('/api/utility/upload', methods=['POST'])
+def upload_file():
     try:
-        # 验证请求
         if 'file' not in request.files:
-            return asdict(ApiResponse(False, "No file provided")), 400
-        
+            return create_response(False, "No file provided"), 400
+            
         file = request.files['file']
         if file.filename == '':
-            return asdict(ApiResponse(False, "No file selected")), 400
+            return create_response(False, "No file selected"), 400
             
-        if not file.filename.lower().endswith('.pdf'):
-            return asdict(ApiResponse(False, "File must be a PDF")), 400
+        # 获取允许的文件类型（如果在请求中指定）
+        allowed_extensions = set(request.form.get('allowed_extensions', '').split(','))
+        if not allowed_extensions:
+            allowed_extensions = None
+            
+        # 使用存储服务上传文件
+        success, message, filepath = current_app.storage_service.upload_file(file, allowed_extensions)
         
-        # 获取压缩级别
-        compression_level_str = request.form.get('compression_level', 'MEDIUM').upper()
-        try:
-            compression_level = CompressionLevel[compression_level_str]
-        except KeyError:
-            return asdict(ApiResponse(False, "Invalid compression level")), 400
-        
-        # 执行压缩
-        pdf_service = PdfService()
-        result = pdf_service.compress_pdf(file, compression_level)
-        
-        # URL编码文件名，确保中文正确显示
-        filename = os.path.basename(result.file_path)
-        encoded_filename = quote(filename)
-        result_dict = asdict(result)
-        result_dict['file_path'] = f"/api/download/{encoded_filename}"
-        
-        return asdict(ApiResponse(True, "PDF compressed successfully", result_dict))
+        if not success:
+            return create_response(False, message), 400
+            
+        return create_response(True, message, {
+            'filepath': filepath,
+            'filename': file.filename
+        })
         
     except Exception as e:
-        return asdict(ApiResponse(False, str(e))), 500 
+        return create_response(False, str(e)), 500
+
+@utility_bp.route('/api/utility/download/<path:filename>', methods=['GET'])
+def download_file(filename):
+    try:
+        # 构建文件路径
+        filepath = f"{current_app.config['DOWNLOAD_FOLDER']}/{filename}"
+        
+        # 使用存储服务检查文件
+        success, message, file_path = current_app.storage_service.download_file(filepath)
+        
+        if not success:
+            return create_response(False, message), 404
+            
+        return send_file(file_path, as_attachment=True)
+        
+    except Exception as e:
+        return create_response(False, str(e)), 500 

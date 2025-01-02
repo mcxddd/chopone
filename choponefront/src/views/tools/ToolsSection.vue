@@ -5,12 +5,6 @@ const router = useRouter();
 
 const tools = [
   {
-    id: "pdf-compress",
-    name: "PDF压缩",
-    description: "在线压缩PDF文件，快速且保持质量",
-    icon: "📄",
-  },
-  {
     id: "future-tool-1",
     name: "未来小工具1",
     description: "正在开发中...",
