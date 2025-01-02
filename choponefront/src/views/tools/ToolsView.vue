@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ToolsSection from "./tools/ToolsSection.vue";
+import ToolsSection from "./ToolsSection.vue";
 </script>
 
 <template>
