@@ -1,15 +1,30 @@
 <!-- AI Chat 界面 -->
 <template>
   <div class="ai-chat">
+    <div class="action-buttons">
+      <button @click="restartChat" class="action-btn">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
+      <button class="action-btn disabled">
+        <i class="fas fa-exchange-alt"></i>
+        开发中
+      </button>
+      <button class="action-btn disabled">
+        <i class="fas fa-tools"></i>
+        开发中
+      </button>
+    </div>
     <div class="chat-container">
       <div class="chat-messages" ref="messagesContainer">
-        <div
-          v-for="(msg, index) in messages"
-          :key="index"
-          :class="['message', msg.type]"
-        >
-          {{ msg.content }}
-        </div>
+        <TransitionGroup name="message-fade">
+          <ChatMessage
+            v-for="(msg, index) in messages"
+            :key="index"
+            :type="msg.type"
+            :content="msg.content"
+          />
+        </TransitionGroup>
       </div>
       <div class="chat-input">
         <input
@@ -25,8 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick, TransitionGroup } from "vue";
 import type { Message } from "@/types/chat";
+import ChatMessage from "@/components/chat/ChatMessage.vue";
 
 const userInput = ref("");
 const messages = ref<Message[]>([]);
@@ -98,6 +114,44 @@ onMounted(() => {
     content: "你好！我是GPT-4o-mini，有什么我可以帮你的吗？",
   });
 });
+
+// 重新开始对话
+const restartChat = async () => {
+  try {
+    // 先清空消息，触发淡出动画
+    messages.value = [];
+
+    const response = await fetch("/api/ai/restart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+
+    // 短暂延迟后添加欢迎消息，让动画效果更明显
+    setTimeout(() => {
+      messages.value = [
+        {
+          type: "ai",
+          content: data.data.welcome_message,
+        },
+      ];
+    }, 300);
+  } catch (error) {
+    console.error("Error:", error);
+    messages.value.push({
+      type: "error",
+      content: "重新开始对话失败，请稍后重试。",
+    });
+  }
+};
 </script>
 
 <style scoped>
@@ -272,5 +326,74 @@ button:hover {
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #e2e8f0;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.action-btn i {
+  font-size: 16px;
+}
+
+.action-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.action-btn.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.system {
+  background: rgba(147, 197, 253, 0.2);
+  color: #bfdbfe;
+  margin-right: auto;
+  border: 1px solid rgba(147, 197, 253, 0.3);
+  font-style: italic;
+}
+
+.message-fade-enter-active,
+.message-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.message-fade-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.message-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.message-fade-move {
+  transition: transform 0.3s ease;
 }
 </style>

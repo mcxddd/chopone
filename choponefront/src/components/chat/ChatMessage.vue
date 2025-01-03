@@ -1,18 +1,45 @@
 <template>
   <div :class="['message', type]">
     {{ content }}
+    <button
+      v-if="type === 'ai'"
+      :class="['copy-btn', { 'copy-success': copySuccess }]"
+      @click="copyContent"
+      title="复制内容"
+    >
+      <span class="copy-icon" v-if="!copySuccess"></span>
+      <span class="check-icon" v-else>✓</span>
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  type: "user" | "ai" | "error" | "loading";
+import { ref } from "vue";
+
+const props = defineProps<{
+  type: "user" | "ai" | "error" | "loading" | "system";
   content: string;
 }>();
+
+const copySuccess = ref(false);
+
+const copyContent = async (event: MouseEvent) => {
+  event.stopPropagation();
+  try {
+    await navigator.clipboard.writeText(props.content);
+    copySuccess.value = true;
+    setTimeout(() => {
+      copySuccess.value = false;
+    }, 2000);
+  } catch (err) {
+    console.error("复制失败:", err);
+  }
+};
 </script>
 
 <style scoped>
 .message {
+  position: relative;
   margin: 10px 0;
   padding: 12px 16px;
   border-radius: 8px;
@@ -94,5 +121,76 @@ defineProps<{
   100% {
     transform: translateX(-100%);
   }
+}
+
+.copy-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.message:hover .copy-btn {
+  opacity: 0.5;
+}
+
+.copy-btn:hover {
+  opacity: 0.8 !important;
+}
+
+.copy-icon {
+  position: relative;
+  width: 12px;
+  height: 12px;
+}
+
+.copy-icon::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 5px;
+  height: 1.5px;
+  background: currentColor;
+  box-shadow: 0 -4px 0 currentColor, 0 4px 0 currentColor;
+  transition: all 0.3s;
+}
+
+.check-icon {
+  color: #22c55e;
+  font-size: 14px;
+  font-weight: bold;
+  animation: scale-in 0.2s ease-out;
+}
+
+@keyframes scale-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.system {
+  background: rgba(147, 197, 253, 0.2);
+  color: #bfdbfe;
+  margin-right: auto;
+  border: 1px solid rgba(147, 197, 253, 0.3);
+  font-style: italic;
 }
 </style>
