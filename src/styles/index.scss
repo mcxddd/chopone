@@ -1,0 +1,55 @@
+// 基础变量
+$primary-color: #00fff2; // 霓虹青色主色
+$secondary-color: #7b2ff7; // 电子紫色
+$accent-color: #ff2a6d; // 霓虹粉色
+$active-color: #b4a5ff; // 活跃状态颜色（淡紫色）
+$background: #0a0b14; // 深邃背景色
+$surface-color: #141625; // 表面颜色
+$text-color: #e0e6ff; // 主要文字颜色
+$text-color-secondary: #8b93b8; // 次要文字颜色
+
+// Reset
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// Vant 主题定制
+:root:root {
+  // 基础主题
+  --van-primary-color: #{$primary-color};
+  --van-background: #{$background};
+  --van-text-color: #{$text-color};
+
+  // 组件样式
+  --van-padding-md: 16px;
+  --van-cell-group-inset-radius: 12px;
+  --van-cell-group-inset-padding: var(--van-padding-md);
+  --van-cell-background: #{$surface-color};
+  --van-cell-text-color: #{$text-color};
+  --van-cell-border-color: rgba(255, 255, 255, 0.08);
+
+  // Tabbar
+  --van-tabbar-height: 56px;
+  --van-tabbar-item-active-color: #{$active-color};
+  --van-tabbar-background: rgba(#{$surface-color}, 0.95);
+  --van-tabbar-item-text-color: #{$text-color-secondary};
+  --van-tabbar-item-active-background: #{$surface-color};
+}
+
+// 全局样式
+body {
+  background-color: var(--van-background);
+  color: var(--van-text-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: var(--van-tabbar-height);
+}
